@@ -5,9 +5,12 @@
 
 int main(int argc, char*argv[])
 {
-    int treeLen = 6;
-    int pre[] = {1, 2, 3, 4, 5, 6}; // 前序遍历
-    int mid[] = {3, 2, 1, 5, 4, 6}; // 中序遍历
+
+    
+    int pre[] = {1, 2, 4, 7, 8, 5, 3, 6, 9};
+    int mid[] = {7, 4, 8, 2, 5, 1, 6, 9, 3};
+    int treeLen = 9;
+
     CBinaryTree<int> t;
     t.recoveryTree(mid, pre, treeLen);
     t.preorderRecursion();
@@ -17,6 +20,14 @@ int main(int argc, char*argv[])
     t.postorderRecursion();
     t.showResultSeq();
 
+    t.preorderIteration();
+    t.showResultSeq();
+    t.inorderIteration();
+    t.showResultSeq();
+    t.postorderIteration();
+    t.showResultSeq();
 
+    t.levelOrder();
+    t.showResultSeq();
     return 0;
 }

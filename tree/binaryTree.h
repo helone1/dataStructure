@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <stack>
+#include <queue>
 
 template<typename T>
 struct TTreeNode
@@ -72,7 +73,7 @@ private:
     }
 
 public:
-    // 前序遍历
+    // 前序遍历-递归
     void preorderRecursion()
     {
         m_pSequence.clear();
@@ -97,7 +98,7 @@ private:
     }
 
 public:
-    // 中序遍历
+    // 中序遍历-递归
     void inorderRecursion()
     {
         m_pSequence.clear();
@@ -122,7 +123,7 @@ private:
     }
 
 public:
-    // 后续遍历
+    // 后续遍历-递归
     void postorderRecursion()
     {
         m_pSequence.clear();
@@ -145,6 +146,135 @@ private:
         _postorderRecursion(pTree->m_pRtNode);
         m_pSequence.push_back(pTree->m_value);
     }
+
+public:
+    // 前序遍历-迭代
+    void preorderIteration()
+    {
+        m_pSequence.clear();
+        std::stack<TTreeNode<T>*> nodeStack;
+        TTreeNode<T> *pNode = m_pTree;
+
+        while(true)
+        {
+            while(pNode != nullptr)
+            {
+                m_pSequence.push_back(pNode->m_value);
+                nodeStack.push(pNode);
+                pNode = pNode->m_pLfNode;
+            }
+
+            if(nodeStack.empty())
+                break;
+            pNode = nodeStack.top();
+            nodeStack.pop();
+            pNode = pNode->m_pRtNode;
+
+        }
+    }
+
+public:
+    // 中序遍历-迭代
+    void inorderIteration()
+    {
+        m_pSequence.clear();
+        std::stack<TTreeNode<T> *> nodeStack;
+        TTreeNode<T> *pNode = m_pTree; 
+
+        while(true)
+        {
+            _inorderIteration(pNode, nodeStack);
+            if(nodeStack.empty())
+                break;
+            pNode = nodeStack.top();
+            nodeStack.pop();
+            m_pSequence.push_back(pNode->m_value);
+            pNode = pNode->m_pRtNode;
+        }
+    }
+private:
+    void _inorderIteration(TTreeNode<T> *pNode, std::stack<TTreeNode<T>*> &nodeStack)
+    {
+        while(pNode != nullptr)
+        {
+            nodeStack.push(pNode);
+            pNode = pNode->m_pLfNode;
+        }
+    }
+
+
+public:
+    void postorderIteration()
+    {
+        m_pSequence.clear();
+        std::stack<TTreeNode<T>*> nodeStack;
+        TTreeNode<T> *pNode = m_pTree;
+        TTreeNode<T> *pPrev = nullptr;
+        while(true)
+        {
+            _postorderIteration(pNode, nodeStack);
+            if(nodeStack.empty())
+                break;
+            pNode = nodeStack.top();
+
+            if(pNode->m_pRtNode == nullptr || pNode->m_pRtNode == pPrev)
+            {
+                m_pSequence.push_back(pNode->m_value);
+                nodeStack.pop();
+                pPrev = pNode;
+                // std::cout<<pNode->m_value<<",";
+                pNode = nullptr;
+            }
+            else
+            {
+                pNode = pNode->m_pRtNode;
+            }
+        }
+    }
+private:
+    void _postorderIteration(TTreeNode<T> *pNode, std::stack<TTreeNode<T>*> &nodeStack)
+    {
+        while(pNode != nullptr)
+        {
+            nodeStack.push(pNode);
+            pNode = pNode->m_pLfNode;
+        }
+    }
+
+public:
+    void levelOrder()
+    {
+        m_pSequence.clear();
+        if(m_pTree==nullptr)
+            return;
+
+        std::queue<TTreeNode<T>*> q;
+        q.push(m_pTree);
+        TTreeNode<T> *pNode = nullptr;
+        while(!q.empty())
+        {
+            int stkSize = q.size();
+
+            for(int i=0; i< stkSize; ++i)
+            {
+                pNode = q.front();
+                q.pop();
+                m_pSequence.push_back(pNode->m_value);
+
+                if(pNode->m_pLfNode != nullptr)
+                {
+                    q.push(pNode->m_pLfNode);
+                }
+                if(pNode->m_pRtNode != nullptr)
+                {
+                    q.push(pNode->m_pRtNode);
+                }
+                
+            }
+
+        }
+    }
+
 
 public:
     // 显示所有遍历的结果
